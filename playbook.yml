@@ -1,0 +1,9 @@
+---
+- hosts: desktop
+  roles:
+      - common
+      - desktop
+
+- hosts: servers
+  roles:
+      - common
