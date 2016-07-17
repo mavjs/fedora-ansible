@@ -1,0 +1,87 @@
+- name: Add google chrome repository
+  template:
+      src: templates/google-chrome.repo.j2
+      dest: /etc/yum.repos.d/google-chrome.repo
+      owner: root
+      group: root
+      mode: "u=rw,g=r,o=r"
+
+- name: Install rpmfusion repo packages
+  dnf: name={{ item }} state=latest
+  with_items:
+      - http://download1.rpmfusion.org/free/fedora/rpmfusion-free-release-{{ ansible_distribution_version }}.noarch.rpm
+      - http://download1.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-{{ ansible_distribution_version }}.noarch.rpm
+
+- name: Install essential desktop packages
+  dnf: name={{ item }} state=latest
+  with_items:
+      - terminator
+      - gnome-tweak-tool
+      - thunderbird
+      - thunderbird-enigmail
+      - keepassx
+      - google-chrome-stable
+
+- name: Install negativo17's NVIDIA repo
+  get_url:
+      url: http://negativo17.org/repos/fedora-nvidia.repo
+      dest: /etc/yum.repos.d/fedora-nvidia.repo
+      owner: root
+      group: root
+      mode: "u=rw,g=r,o=r"
+  tags:
+      - nvidia
+
+- name: Install negativo17's ffmpeg repo
+  get_url:
+      url: http://negativo17.org/repos/fedora-handbrake.repo
+      dest: /etc/yum.repos.d/fedora-handbrake.repo
+      owner: root
+      group: root
+      mode: "u=rw,g=r,o=r"
+  tags:
+      - media
+
+- name: Install negativo17's spotify repo
+  get_url:
+      url: http://negativo17.org/repos/fedora-spotify.repo
+      dest: /etc/yum.repos.d/fedora-spotify.repo
+      owner: root
+      group: root
+      mode: "u=rw,g=r,o=r"
+  tags:
+      - media
+
+- name: Install negativo17's steam repo
+  get_url:
+      url: http://negativo17.org/repos/fedora-steam.repo
+      dest: /etc/yum.repos.d/fedora-steam.repo
+      owner: root
+      group: root
+      mode: "u=rw,g=r,o=r"
+  tags:
+      - gaming
+
+- name: Install nvidia related binary packages from negativo17
+  dnf: name={{ item }} state=latest
+  with_items:
+      - nvidia-driver
+      - akmod-nvidia
+      - cuda
+      - nvidia-driver-cuda
+  tags:
+      - nvidia
+
+- name: Install multimedia binary packages from negativo17
+  dnf: name={{ item }} state=latest
+  with_items:
+      - ffmpeg
+      - smplayer
+      - spotify-client
+  tags:
+      - media
+
+- name: Install steam binary package from negativo17
+  dnf: name=steam state=latest
+  tags:
+      - gaming

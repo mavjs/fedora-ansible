@@ -1,0 +1,15 @@
+- name: update all packages
+  command: /usr/bin/dnf --refresh upgrade -y
+  tags: update
+
+- name: Install essential basic packages
+  dnf: name="{{ item }}" state=latest
+  with_items:
+      - tmux
+      - vim-enhanced
+      - docker
+      - stow
+      - zsh
+      - git
+      - python-virtualenvwrapper
+  notify: start docker
